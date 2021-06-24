@@ -6,6 +6,8 @@ use anyhow::bail;
 enum Error {
     #[error("invalid colour: {0}")]
     InvalidColour(String),
+    #[error("invalid hex colour: {0}")]
+    InvalidHexColour(String),
 }
 
 type PixelValue = u8;
@@ -17,10 +19,29 @@ struct Colour {
     b: PixelValue,
 }
 
+impl Colour {
+    fn from_rgb(rgb: (u8, u8, u8)) -> Self {
+        Self {
+            r: rgb.0,
+            b: rgb.1,
+            g: rgb.2,
+        }
+    }
+}
+
+fn parse_hex(s: &str) -> Result<(u8, u8, u8), Error> {
+    return Err(Error::InvalidHexColour(s.to_string()));
+}
+
 impl FromStr for Colour {
     type Err = Error;
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
+        if s.starts_with('#') {
+            let rgb = parse_hex(s)?;
+            return Ok(Colour::from_rgb(rgb));
+        }
+
         let colour = match s {
             "black" => Self { r: 0, g: 0, b: 0 },
             _ => return Err(Error::InvalidColour(s.to_string())),
