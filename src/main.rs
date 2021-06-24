@@ -1,5 +1,11 @@
 use std::fmt;
 
+#[derive(Debug, thiserror::Error)]
+enum Error {
+    #[error("invalid colour: {0}")]
+    InvalidColour(String),
+}
+
 type PixelValue = u8;
 
 #[derive(Debug, Clone)]
@@ -7,6 +13,17 @@ struct Colour {
     r: PixelValue,
     g: PixelValue,
     b: PixelValue,
+}
+
+impl Colour {
+    fn from_string(spec: String) -> Result<Self, Error> {
+        let colour = match spec.as_str() {
+            "black" => Self { r: 0, g: 0, b: 0 },
+            _ => return Err(Error::InvalidColour(spec)),
+        };
+
+        Ok(colour)
+    }
 }
 
 #[derive(Debug)]
@@ -49,8 +66,11 @@ impl fmt::Display for Image {
     }
 }
 
-fn main() {
-    let image = Image::new(10, 10, Colour { r: 0, g: 0, b: 0 });
+fn main() -> Result<(), anyhow::Error> {
+    let colour = Colour::from_string("black".to_string())?;
+    let image = Image::new(10, 10, colour);
     eprintln!("{:#?}", image);
     println!("{}", image);
+
+    Ok(())
 }
