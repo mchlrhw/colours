@@ -1,5 +1,5 @@
 mod colour;
-mod hex;
+pub mod hex;
 pub mod image;
 
 #[derive(Debug, thiserror::Error)]

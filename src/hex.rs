@@ -2,6 +2,20 @@ use regex::Regex;
 
 use crate::Error;
 
+/// Convert a string of the form "#ffffff" into a tuple of three `u8`s
+///
+/// # Example
+///
+/// ```
+/// # use colours::hex::parse_hex;
+/// # fn main() -> Result<(), anyhow::Error> {
+/// let hex_string = "#0000ff";
+/// let parsed = parse_hex(hex_string)?;
+///
+/// assert_eq!(parsed, (0, 0, 255));
+/// # Ok(())
+/// # }
+/// ```
 pub fn parse_hex(s: &str) -> Result<(u8, u8, u8), Error> {
     let re = Regex::new(r"#([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})")?;
     let caps = match re.captures(s) {
