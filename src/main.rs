@@ -1,4 +1,4 @@
-use std::fmt;
+use std::{fmt, str::FromStr};
 
 #[derive(Debug, thiserror::Error)]
 enum Error {
@@ -15,11 +15,13 @@ struct Colour {
     b: PixelValue,
 }
 
-impl Colour {
-    fn from_str(spec: &str) -> Result<Self, Error> {
-        let colour = match spec {
+impl FromStr for Colour {
+    type Err = Error;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        let colour = match s {
             "black" => Self { r: 0, g: 0, b: 0 },
-            _ => return Err(Error::InvalidColour(spec.to_string())),
+            _ => return Err(Error::InvalidColour(s.to_string())),
         };
 
         Ok(colour)
@@ -67,7 +69,7 @@ impl fmt::Display for Image {
 }
 
 fn main() -> Result<(), anyhow::Error> {
-    let colour = Colour::from_str("black")?;
+    let colour = "black".parse()?;
     let image = Image::new(10, 10, colour);
     eprintln!("{:#?}", image);
     println!("{}", image);
