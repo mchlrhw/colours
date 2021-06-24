@@ -27,19 +27,21 @@ impl Image {
     }
 }
 
-fn image_to_ppm(image: Image) -> String {
-    let mut ppm = format!("P3\n{} {}\n255\n", image.width, image.height);
+impl ToString for Image {
+    fn to_string(&self) -> String {
+        let mut ppm = format!("P3\n{} {}\n255\n", self.width, self.height);
 
-    for pixel in image.pixels {
-        ppm += &format!("{} {} {}\n", pixel.r, pixel.g, pixel.b);
+        for pixel in &self.pixels {
+            ppm += &format!("{} {} {}\n", pixel.r, pixel.g, pixel.b);
+        }
+
+        ppm
     }
-
-    ppm
 }
 
 fn main() {
     let image = Image::new(10, 10, Colour { r: 0, g: 0, b: 0 });
     eprintln!("{:#?}", image);
-    let ppm = image_to_ppm(image);
+    let ppm = image.to_string();
     println!("{}", ppm);
 }
