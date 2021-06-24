@@ -10,6 +10,16 @@ struct Image {
     pixels: Vec<Colour>,
 }
 
+impl Image {
+    fn new() -> Self {
+        Self {
+            width: 1,
+            height: 1,
+            pixels: vec![Colour { r: 0, g: 0, b: 0 }],
+        }
+    }
+}
+
 fn image_to_ppm(image: Image) -> String {
     let mut ppm = format!("P3\n{} {}\n255\n", image.width, image.height);
 
@@ -21,11 +31,7 @@ fn image_to_ppm(image: Image) -> String {
 }
 
 fn main() {
-    let image = Image {
-        width: 1,
-        height: 1,
-        pixels: vec![Colour { r: 0, g: 0, b: 0 }],
-    };
+    let image = Image::new();
     let ppm = image_to_ppm(image);
     println!("{}", ppm);
 }
