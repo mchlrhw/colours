@@ -1,9 +1,11 @@
+#[derive(Debug)]
 struct Colour {
     r: u8,
     g: u8,
     b: u8,
 }
 
+#[derive(Debug)]
 struct Image {
     width: u8,
     height: u8,
@@ -32,6 +34,7 @@ fn image_to_ppm(image: Image) -> String {
 
 fn main() {
     let image = Image::new(1, 1);
+    eprintln!("{:#?}", image);
     let ppm = image_to_ppm(image);
     println!("{}", ppm);
 }
