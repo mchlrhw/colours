@@ -1,4 +1,4 @@
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 struct Colour {
     r: u8,
     g: u8,
@@ -13,10 +13,10 @@ struct Image {
 }
 
 impl Image {
-    fn new(width: u8, height: u8) -> Self {
+    fn new(width: u8, height: u8, colour: Colour) -> Self {
         let mut pixels = Vec::with_capacity(width as usize * height as usize);
         for _ in 0..pixels.capacity() {
-            pixels.push(Colour { r: 0, g: 0, b: 0 });
+            pixels.push(colour.clone());
         }
 
         Self {
@@ -38,7 +38,7 @@ fn image_to_ppm(image: Image) -> String {
 }
 
 fn main() {
-    let image = Image::new(10, 10);
+    let image = Image::new(10, 10, Colour { r: 0, g: 0, b: 0 });
     eprintln!("{:#?}", image);
     let ppm = image_to_ppm(image);
     println!("{}", ppm);
