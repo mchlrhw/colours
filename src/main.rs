@@ -16,10 +16,10 @@ struct Colour {
 }
 
 impl Colour {
-    fn from_string(spec: String) -> Result<Self, Error> {
-        let colour = match spec.as_str() {
+    fn from_str(spec: &str) -> Result<Self, Error> {
+        let colour = match spec {
             "black" => Self { r: 0, g: 0, b: 0 },
-            _ => return Err(Error::InvalidColour(spec)),
+            _ => return Err(Error::InvalidColour(spec.to_string())),
         };
 
         Ok(colour)
@@ -67,7 +67,7 @@ impl fmt::Display for Image {
 }
 
 fn main() -> Result<(), anyhow::Error> {
-    let colour = Colour::from_string("black".to_string())?;
+    let colour = Colour::from_str("black")?;
     let image = Image::new(10, 10, colour);
     eprintln!("{:#?}", image);
     println!("{}", image);
