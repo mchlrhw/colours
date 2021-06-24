@@ -15,3 +15,26 @@ pub fn parse_hex(s: &str) -> Result<(u8, u8, u8), Error> {
 
     Ok((r, g, b))
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_valid_hex() {
+        let s = "#ffffff";
+        let expected = (255, 255, 255);
+
+        let parsed = parse_hex(s).unwrap();
+
+        assert_eq!(parsed, expected);
+    }
+
+    #[test]
+    #[should_panic]
+    fn test_invalid_hex() {
+        let s = "foobarbaz";
+
+        parse_hex(s).unwrap();
+    }
+}
