@@ -1,3 +1,5 @@
+use std::fmt;
+
 #[derive(Debug, Clone)]
 struct Colour {
     r: u8,
@@ -27,21 +29,20 @@ impl Image {
     }
 }
 
-impl ToString for Image {
-    fn to_string(&self) -> String {
-        let mut ppm = format!("P3\n{} {}\n255\n", self.width, self.height);
+impl fmt::Display for Image {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "P3\n{} {}\n255\n", self.width, self.height)?;
 
         for pixel in &self.pixels {
-            ppm += &format!("{} {} {}\n", pixel.r, pixel.g, pixel.b);
+            write!(f, "{} {} {}\n", pixel.r, pixel.g, pixel.b)?;
         }
 
-        ppm
+        Ok(())
     }
 }
 
 fn main() {
     let image = Image::new(10, 10, Colour { r: 0, g: 0, b: 0 });
     eprintln!("{:#?}", image);
-    let ppm = image.to_string();
-    println!("{}", ppm);
+    println!("{}", image);
 }
