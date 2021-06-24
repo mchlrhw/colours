@@ -1,6 +1,7 @@
 use std::{env, fmt, str::FromStr};
 
 use anyhow::bail;
+use regex::Regex;
 
 #[derive(Debug, thiserror::Error)]
 enum Error {
@@ -8,6 +9,10 @@ enum Error {
     InvalidColour(String),
     #[error("invalid hex colour: {0}")]
     InvalidHexColour(String),
+    #[error(transparent)]
+    ParseInt(#[from] std::num::ParseIntError),
+    #[error(transparent)]
+    Regex(#[from] regex::Error),
 }
 
 type PixelValue = u8;
@@ -23,14 +28,24 @@ impl Colour {
     fn from_rgb(rgb: (u8, u8, u8)) -> Self {
         Self {
             r: rgb.0,
-            b: rgb.1,
-            g: rgb.2,
+            g: rgb.1,
+            b: rgb.2,
         }
     }
 }
 
 fn parse_hex(s: &str) -> Result<(u8, u8, u8), Error> {
-    return Err(Error::InvalidHexColour(s.to_string()));
+    let re = Regex::new(r"#([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})")?;
+    let caps = match re.captures(s) {
+        Some(caps) => caps,
+        None => return Err(Error::InvalidHexColour(s.to_string())),
+    };
+
+    let r = u8::from_str_radix(&caps[1], 16)?;
+    let g = u8::from_str_radix(&caps[2], 16)?;
+    let b = u8::from_str_radix(&caps[3], 16)?;
+
+    Ok((r, g, b))
 }
 
 impl FromStr for Colour {
@@ -99,7 +114,7 @@ fn main() -> Result<(), anyhow::Error> {
 
     let colour = args[1].parse()?;
 
-    let image = Image::new(10, 10, colour);
+    let image = Image::new(100, 100, colour);
     eprintln!("{:#?}", image);
 
     println!("{}", image);
