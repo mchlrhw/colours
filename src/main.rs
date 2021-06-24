@@ -1,10 +1,12 @@
 use std::fmt;
 
+type PixelValue = u8;
+
 #[derive(Debug, Clone)]
 struct Colour {
-    r: u8,
-    g: u8,
-    b: u8,
+    r: PixelValue,
+    g: PixelValue,
+    b: PixelValue,
 }
 
 #[derive(Debug)]
@@ -31,7 +33,13 @@ impl Image {
 
 impl fmt::Display for Image {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "P3\n{} {}\n255\n", self.width, self.height)?;
+        write!(
+            f,
+            "P3\n{} {}\n{}\n",
+            self.width,
+            self.height,
+            PixelValue::MAX,
+        )?;
 
         for pixel in &self.pixels {
             write!(f, "{} {} {}\n", pixel.r, pixel.g, pixel.b)?;
