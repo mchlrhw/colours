@@ -1,4 +1,6 @@
-use std::{fmt, str::FromStr};
+use std::{env, fmt, str::FromStr};
+
+use anyhow::bail;
 
 #[derive(Debug, thiserror::Error)]
 enum Error {
@@ -69,9 +71,16 @@ impl fmt::Display for Image {
 }
 
 fn main() -> Result<(), anyhow::Error> {
-    let colour = "black".parse()?;
+    let args: Vec<String> = env::args().collect();
+    if args.len() != 2 {
+        bail!("usage: colours <colour>");
+    }
+
+    let colour = args[1].parse()?;
+
     let image = Image::new(10, 10, colour);
     eprintln!("{:#?}", image);
+
     println!("{}", image);
 
     Ok(())
