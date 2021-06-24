@@ -11,10 +11,10 @@ struct Image {
 }
 
 impl Image {
-    fn new() -> Self {
+    fn new(width: u8, height: u8) -> Self {
         Self {
-            width: 1,
-            height: 1,
+            width,
+            height,
             pixels: vec![Colour { r: 0, g: 0, b: 0 }],
         }
     }
@@ -31,7 +31,7 @@ fn image_to_ppm(image: Image) -> String {
 }
 
 fn main() {
-    let image = Image::new();
+    let image = Image::new(1, 1);
     let ppm = image_to_ppm(image);
     println!("{}", ppm);
 }
