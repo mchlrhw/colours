@@ -12,7 +12,7 @@ fn main() -> Result<(), anyhow::Error> {
 
     let colour = args[1].parse()?;
 
-    let image = Image::new(100, 100, colour);
+    let image = Image::new(100, 100, &colour);
     eprintln!("{:#?}", image);
 
     println!("{}", image);

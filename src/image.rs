@@ -3,17 +3,17 @@ use std::fmt;
 use crate::{colour::Colour, PixelValue};
 
 #[derive(Debug)]
-pub struct Image {
+pub struct Image<'a> {
     width: u8,
     height: u8,
-    pixels: Vec<Colour>,
+    pixels: Vec<&'a Colour>,
 }
 
-impl Image {
-    pub fn new(width: u8, height: u8, colour: Colour) -> Self {
+impl<'a> Image<'a> {
+    pub fn new(width: u8, height: u8, colour: &'a Colour) -> Self {
         let mut pixels = Vec::with_capacity(width as usize * height as usize);
         for _ in 0..pixels.capacity() {
-            pixels.push(colour.clone());
+            pixels.push(colour);
         }
 
         Self {
@@ -24,7 +24,7 @@ impl Image {
     }
 }
 
-impl fmt::Display for Image {
+impl fmt::Display for Image<'_> {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         write!(
             f,
